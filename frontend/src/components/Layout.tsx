@@ -1,8 +1,6 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import {
-  LayoutDashboard, Users, TrendingUp, Package, ShoppingCart, LogOut, Cloud
-} from 'lucide-react';
+import { LayoutDashboard, Users, TrendingUp, Package, ShoppingCart, Cloud } from 'lucide-react';
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard', end: true },
