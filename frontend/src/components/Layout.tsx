@@ -22,63 +22,49 @@ export default function Layout() {
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
-      {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 flex flex-col">
-        <div className="px-6 py-5 border-b border-gray-700">
-          <div className="flex items-center gap-2">
-            <Cloud className="w-6 h-6 text-blue-400" />
-            <span className="text-white font-bold text-lg">CRM Cloud</span>
+    <div className="min-h-screen flex flex-col">
+      {/* Top nav */}
+      <header className="w-full bg-white/60 backdrop-blur-sm border-b border-white/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="inline-flex items-center justify-center w-10 h-10 bg-amber-500 rounded-lg text-white shadow">
+              <Cloud className="w-5 h-5" />
+            </div>
+            <div className="hidden sm:block">
+              <div className="text-sm font-bold text-gray-900">CRM Cloud</div>
+              <div className="text-xs text-gray-500">Wholesale Fashion</div>
+            </div>
           </div>
-          <p className="text-gray-400 text-xs mt-1">Wholesale Fashion</p>
-        </div>
 
-        <nav className="flex-1 px-3 py-4 space-y-1">
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-3">
+              <span className="text-sm text-gray-600">{user?.name}</span>
+              <div className="w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center text-white font-semibold">{user?.name?.[0]?.toUpperCase()}</div>
+            </div>
+            <button onClick={handleLogout} className="btn-secondary">Sign out</button>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left quickbar */}
+        <aside className="w-16 bg-white/30 border-r border-white/20 flex flex-col items-center py-6 gap-4">
           {navItems.map(({ to, icon: Icon, label, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
-                }`
-              }
-            >
-              <Icon className="w-4 h-4" />
-              {label}
+            <NavLink key={to} to={to} end={end} className={({ isActive }) =>
+              `w-10 h-10 flex items-center justify-center rounded-xl transition-colors ${isActive ? 'bg-amber-600 text-white' : 'text-gray-600 hover:bg-white/60'}`
+            } title={label}>
+              <Icon className="w-5 h-5" />
             </NavLink>
           ))}
-        </nav>
+        </aside>
 
-        <div className="px-4 py-4 border-t border-gray-700">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-bold">
-              {user?.name?.[0]?.toUpperCase()}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-medium truncate">{user?.name}</p>
-              <p className="text-gray-400 text-xs capitalize">{user?.role}</p>
-            </div>
+        {/* Main content */}
+        <main className="flex-1 overflow-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <Outlet />
           </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 w-full px-3 py-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg text-sm transition-colors"
-          >
-            <LogOut className="w-4 h-4" />
-            Sign out
-          </button>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <main className="flex-1 overflow-auto">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <Outlet />
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
