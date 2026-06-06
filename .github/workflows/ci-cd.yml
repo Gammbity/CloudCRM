@@ -270,6 +270,11 @@ jobs:
               'until sudo docker compose ps postgres 2>/dev/null | grep -q "(healthy)"; do sleep 3; done' \
               || echo "Postgres health timeout — continuing anyway"
 
+            # ── 8.5. Run DB seed (idempotent) to ensure demo users exist
+            # The `seed` service runs Prisma seed (ts-node) inside the builder image.
+            echo "Running DB seed to populate demo data (idempotent)..."
+            sudo docker compose run --rm seed || echo "Seed run failed or skipped"
+
             # ── 9. Zero-downtime rolling backend update ───────────────
             sudo docker compose up -d --no-deps --scale backend=2 backend
             sleep 20

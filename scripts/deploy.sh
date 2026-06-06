@@ -45,6 +45,10 @@ fi
 # Pull new images
 IMAGE_TAG="$IMAGE_TAG" docker compose -f docker-compose.prod.yml pull
 
+# Run DB seed (idempotent) to ensure demo users exist
+echo "Running DB seed to populate demo data (idempotent)..."
+IMAGE_TAG="$IMAGE_TAG" docker compose -f docker-compose.prod.yml run --rm seed || echo "Seed run failed or skipped"
+
 # Rolling restart: backend first
 docker compose -f docker-compose.prod.yml up -d --no-deps backend
 sleep 15
