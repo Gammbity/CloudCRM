@@ -17,6 +17,31 @@ ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$EC2_USER@$EC2_HOST" << REMOTE
 set -e
 cd /opt/crm-cloud
 
+# Ensure repository is present and up-to-date on the remote host.
+# Prefer SSH clone/pull to avoid interactive HTTPS password prompts. If SSH access
+# is not available, fall back to HTTPS clone using the provided GITHUB_OWNER.
+GITHUB_OWNER="${GITHUB_OWNER:-fuzailovvv}"
+if [ -d /opt/crm-cloud/.git ]; then
+	echo "Repository exists — fetching latest changes"
+	cd /opt/crm-cloud
+	git fetch --all --prune
+	git reset --hard origin/main || true
+else
+	echo "Repository not found — attempting SSH clone"
+	if git ls-remote git@github.com:$GITHUB_OWNER/CloudCRM.git >/dev/null 2>&1; then
+		git clone --depth 1 git@github.com:$GITHUB_OWNER/CloudCRM.git /opt/crm-cloud
+	else
+		echo "SSH clone failed or not available — falling back to HTTPS clone"
+		git clone --depth 1 https://github.com/$GITHUB_OWNER/CloudCRM.git /opt/crm-cloud
+	fi
+fi
+
+# Optional: login to private registry if credentials supplied to avoid interactive prompts
+if [ -n "$REGISTRY" ] && [ -n "$REGISTRY_USER" ] && [ -n "$REGISTRY_TOKEN" ]; then
+	echo "Logging in to registry $REGISTRY"
+	echo "$REGISTRY_TOKEN" | docker login $REGISTRY -u "$REGISTRY_USER" --password-stdin
+fi
+
 # Pull new images
 IMAGE_TAG="$IMAGE_TAG" docker compose -f docker-compose.prod.yml pull
 
