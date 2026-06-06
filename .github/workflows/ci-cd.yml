@@ -240,8 +240,14 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
-            # ── 5. Login to GitHub Container Registry ─────────────────
-            echo "${{ secrets.REGISTRY_TOKEN }}" | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            # ── 5. Login to GitHub Container Registry (optional) ─────
+            # Only attempt to login if a registry token is provided; otherwise skip to avoid
+            # failing the deployment when REGISTRY_TOKEN is not set.
+            if [ -n "${{ secrets.REGISTRY_TOKEN }}" ]; then
+              echo "${{ secrets.REGISTRY_TOKEN }}" | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            else
+              echo "No REGISTRY_TOKEN provided — skipping registry login"
+            fi
 
             # ── 6. Set environment variables ──────────────────────────
             export IMAGE_TAG=${{ needs.build.outputs.image-tag }}
