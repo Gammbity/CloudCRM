@@ -15,8 +15,13 @@ p.user.count()
 
 if [ "$USER_COUNT" = "0" ]; then
   echo "Database is empty — running seed..."
-  node dist/seed/prisma/seed.js
-  echo "Seed completed."
+  # Only run compiled JS seed if it exists in the production image.
+  if [ -f dist/seed/prisma/seed.js ]; then
+    node dist/seed/prisma/seed.js
+    echo "Seed completed."
+  else
+    echo "Compiled seed not found in image (dist/seed/prisma/seed.js) — skipping seed in container."
+  fi
 else
   echo "Database already has data (${USER_COUNT} users) — skipping seed."
 fi
