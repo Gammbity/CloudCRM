@@ -253,10 +253,19 @@ jobs:
             export IMAGE_TAG=${{ needs.build.outputs.image-tag }}
             export REGISTRY=ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
 
-            # Write .env for docker compose (no leading spaces)
+            # Write full .env for docker compose (no leading spaces)
             cat > .env << EOF
             IMAGE_TAG=${IMAGE_TAG}
             REGISTRY=${REGISTRY}
+            POSTGRES_USER=crmuser
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            POSTGRES_DB=crmdb
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            JWT_EXPIRES=7d
+            CORS_ORIGIN=https://crmcloud.duckdns.org
+            LOG_LEVEL=info
+            HTTP_PORT=80
+            HTTPS_PORT=443
             EOF
             sed -i 's/^[[:space:]]*//' .env
 
