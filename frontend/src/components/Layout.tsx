@@ -29,7 +29,7 @@ export default function Layout() {
               <Cloud className="w-5 h-5" />
             </div>
             <div className="hidden sm:block">
-              <div className="text-sm font-bold text-gray-900">CRM Cloud</div>
+              <div className="text-sm font-bold text-gray-900">Retake Cloud</div>
               <div className="text-xs text-gray-500">Wholesale Fashion</div>
             </div>
           </div>
