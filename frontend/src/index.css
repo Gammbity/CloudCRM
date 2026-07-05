@@ -348,6 +348,29 @@ input {
   animation: photoFadeAway 60s linear forwards;
 }
 
+.main-love-wrap {
+  text-align: center;
+  margin: 0 0 20px;
+}
+
+.main-love-image {
+  width: min(560px, 86%);
+  border-radius: 12px;
+  box-shadow: 0 18px 38px rgba(117, 25, 55, 0.12);
+  display: inline-block;
+}
+
+.memory-gallery-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.side-by-side {
+  width: 100%;
+}
+
 .memory-photo-card {
   margin: 0;
   overflow: hidden;

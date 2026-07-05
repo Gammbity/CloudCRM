@@ -4,9 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import { clearLoveAccess } from '../auth/loveAuth';
 
 const MEMORY_IMAGE_CANDIDATES = [
-  ['/love/photo-1.jpg', '/love/photo-1.jpeg', '/love/photo-1.png', '/love/photo-1.webp'],
-  ['/love/photo-2.jpg', '/love/photo-2.jpeg', '/love/photo-2.png', '/love/photo-2.webp'],
+  ['/love/photo_2026-07-05_15-01-21.jpg'],
+  ['/love/photo_2026-07-05_15-01-41.jpg'],
 ];
+
+const USER_LONG_TEXT = `"qizingizni yaxshi ko'raman" deyaymi?" deb akasi bilan ko'rishdim. Mashina urib olganimdan keyin ruhim tushdi, ishtiyoqim yo'qoldi. Keyin qo'rqib qoldim: hozir onamga, adam "bitta qizni yaxshi ko'raman, sovchilikka boring" disam, adam "o'g'lim, yaqinda qilgan ishing yetadi" dedi deb o'yladim, ustiga-ustak o'zimning tayinli ishim ham yo'q edi. O'yladim: avval Zebinisoning o'zidan nima bo'lganini bilib olsam, keyin hammasini gaplashib ko'raman, deb lekin hammasi to'satdan bo'ldi, ham qo'rqdim, ham dovdiradim.
+
+Mana shular sen bilishing kerak bo'lganlari. Men sendan yashiradigan sirim qolmadi. Bilaman, hozir sen mendan nafratlanasan. ko'rgani kelmayapti, men yana ayb ish qildim, hayotimga kelgan ikkinchi go'zal qizni ham yo'qotdim. Buning uchun kechira olsang, kechir, lekin bu hammasi haqiqat.
+
+Boshqa uylanmagunimcha, sendan boshqasini yaxshi kormiman.
+
+Bu safargi va'da: men boshqa senga o'xshagani chiqsa ham, va'da beraman gaplashmiyman Zebiniso.
+
+Agar imkoning bo'lsa, yoz, nima bo'lganini, tushuntir. Agar o'zing yozishni xohlamasang, meni blokdan ochsang, tushunaman va ozim yozaman instadami yoki tg danmi. faqat tushuntir. Agar yo'q, "hech narsa qimiman" desan — kechir, dovdirab o'z baxtimni yo'qotdim. Nima bo'lgandayam men seni sevaman va yaxshi ko'raman, o'zingni ehtiyot qilgin. Iy, "aken menga qo'lini kesdi" dedila — shu to'g'rimi? Agar to'g'ri bo'lsa, unaqa qima, men uning uchun arzirman deb o'ylamiman, ayniqsa oxirgi qilgan ishimdan keyin.
+
+To'liq o'qib chiqqan bo'lsang, rahmat.`;
 
 const PHOTO_STORAGE_KEYS = ['love_photo_1', 'love_photo_2'];
 
@@ -122,42 +134,41 @@ export default function LovePage() {
           <p>Bu sahifa men eslab qolishni xohlagan narsalar uchun.</p>
         </header>
 
-        {showPhotos && (
-          <section className="memory-gallery" aria-label="Xotira rasmlari">
-            {[0, 1].map((index) => {
-              const photoSource = getPhotoSource(index);
+        <section className="memory-gallery-row" aria-label="Ikki rasm">
+          {[0, 1].map((index) => {
+            const photoSource = getPhotoSource(index);
 
-              if (photoSource) {
-                return (
-                  <figure className="memory-photo-card" key={index}>
-                    <img
-                      src={photoSource}
-                      alt={`Xotira rasmi ${index + 1}`}
-                      onError={() => handleImageError(index)}
-                    />
-                    <figcaption>{index + 1}-rasm</figcaption>
-                  </figure>
-                );
-              }
-
+            if (photoSource) {
               return (
-                <label className="memory-photo-upload" key={index}>
-                  <Heart size={28} />
-                  <span>{index + 1}-rasmni tanlash</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(event) => handlePhotoUpload(index, event)}
-                  />
-                </label>
+                <figure className="memory-photo-card side-by-side" key={index}>
+                  <img src={photoSource} alt={`Xotira rasmi ${index + 1}`} onError={() => handleImageError(index)} />
+                </figure>
               );
-            })}
-          </section>
-        )}
+            }
 
-        <section className="memory-text" aria-label="Xotira matni">
-          {MEMORY_PARAGRAPHS.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
+            return (
+              <label className="memory-photo-upload side-by-side" key={index}>
+                <Heart size={28} />
+                <span>{index + 1}-rasmni tanlash</span>
+                <input type="file" accept="image/*" onChange={(event) => handlePhotoUpload(index, event)} />
+              </label>
+            );
+          })}
+        </section>
+
+        <section className="memory-text" aria-label="Esingdami xotira">
+          {MEMORY_PARAGRAPHS.map((paragraph, idx) => (
+            <p key={idx}>{paragraph}</p>
+          ))}
+        </section>
+
+        <div className="main-love-wrap" aria-hidden>
+          <img src="/love/love.jpg" alt="Love" className="main-love-image" />
+        </div>
+
+        <section className="memory-text bottom-text" aria-label="Xotira matni">
+          {USER_LONG_TEXT.split('\n\n').map((paragraph, idx) => (
+            <p key={idx}>{paragraph}</p>
           ))}
         </section>
 
