@@ -1,43 +1,20 @@
-import type { ReactNode } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './hooks/useAuth';
-import Layout from './components/Layout';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { hasLoveAccess } from './auth/loveAuth';
 import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import CustomersPage from './pages/CustomersPage';
-import LeadsPage from './pages/LeadsPage';
-import ProductsPage from './pages/ProductsPage';
-import OrdersPage from './pages/OrdersPage';
+import LovePage from './pages/LovePage';
 
-function PrivateRoute({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
-  return user ? <>{children}</> : <Navigate to="/login" replace />;
+function ProtectedLovePage() {
+  return hasLoveAccess()
+    ? <LovePage />
+    : <Navigate to="/" replace />;
 }
 
 export default function App() {
-  const { user } = useAuth();
-
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/login"
-          element={user ? <Navigate to="/" replace /> : <LoginPage />}
-        />
-        <Route
-          path="/"
-          element={
-            <PrivateRoute>
-              <Layout />
-            </PrivateRoute>
-          }
-        >
-          <Route index element={<DashboardPage />} />
-          <Route path="customers" element={<CustomersPage />} />
-          <Route path="leads" element={<LeadsPage />} />
-          <Route path="products" element={<ProductsPage />} />
-          <Route path="orders" element={<OrdersPage />} />
-        </Route>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/love" element={<ProtectedLovePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

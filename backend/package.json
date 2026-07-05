@@ -1,7 +1,7 @@
 {
   "name": "crm-backend",
   "version": "1.0.0",
-  "description": "CRM Cloud Backend - BTEC Unit 6",
+  "description": "Just open it once and read it, please.",
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",

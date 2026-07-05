@@ -1,91 +1,107 @@
 import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { Cloud, Lock, Mail } from 'lucide-react';
+import { Heart, Lock, UserRound } from 'lucide-react';
+import { grantLoveAccess } from '../auth/loveAuth';
+
+const VALID_LOGINS = ['Qonxor Qizim', 'Qxr Qm'];
+const VALID_PASSWORD = 'hayotim';
 
 export default function LoginPage() {
-  const { login, loading, error } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('admin@crmcloud.uz');
-  const [password, setPassword] = useState('admin123');
+  const [loginValue, setLoginValue] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    try {
-      await login(email, password);
-      navigate('/');
-    } catch {
-      // error is already set in useAuth
+    const cleanLogin = loginValue.trim().replace(/\s+/g, ' ');
+    const hasValidLogin = VALID_LOGINS.some((value) => value.toLowerCase() === cleanLogin.toLowerCase());
+
+    if (!hasValidLogin || password !== VALID_PASSWORD) {
+      setError('Login yoki password xato');
+      return;
     }
+
+    grantLoveAccess();
+    navigate('/love');
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-100 via-white to-amber-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-lg">
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-amber-600 rounded-lg mb-3 shadow-md">
-            <Cloud className="w-7 h-7 text-white" />
-          </div>
-          <h1 className="text-2xl font-extrabold text-amber-900">CRM Cloud</h1>
-          <p className="text-amber-700 mt-1 text-sm">Wholesale Fashion Management</p>
+    <main className="love-screen">
+      <div className="login-wrap">
+        <div className="hearts" aria-hidden>
+          <span className="heart" style={{ left: '12%', top: '78%', ['--x' as any]: '24px', animationDelay: '0s' }} />
+          <span className="heart heart-soft" style={{ left: '31%', top: '84%', ['--x' as any]: '58px', animationDelay: '0.5s' }} />
+          <span className="heart" style={{ left: '52%', top: '82%', ['--x' as any]: '34px', animationDelay: '1s' }} />
+          <span className="heart heart-soft" style={{ left: '74%', top: '86%', ['--x' as any]: '76px', animationDelay: '1.4s' }} />
+          <span className="heart" style={{ left: '90%', top: '80%', ['--x' as any]: '42px', animationDelay: '1.9s' }} />
         </div>
 
-        <div className="card max-w-md mx-auto p-8">
-          <h2 className="text-lg font-semibold text-amber-900 mb-4">Welcome back</h2>
+        <section className="login-hero" aria-label="Login">
+          <div className="login-mark">
+            <Heart size={30} />
+          </div>
+          <h1>Just open it once and read it, please.</h1>
+          <p>The right words open the next page.</p>
+        </section>
+
+        <section className="login-card">
+          <h2>Welcome back</h2>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+            <div className="login-error" role="alert">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-amber-800 mb-1">Email address</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-500" />
+          <form onSubmit={handleSubmit} className="login-form">
+            <label className="field">
+              <span>Login</span>
+              <div className="field-control">
+                <UserRound size={18} />
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="input pl-10"
-                  placeholder="you@company.com"
+                  data-testid="login-input"
+                  type="text"
+                  value={loginValue}
+                  onChange={(e) => setLoginValue(e.target.value)}
+                  placeholder="Q**x*r Q***m"
                   required
                 />
               </div>
-            </div>
+            </label>
 
-            <div>
-              <label className="block text-sm font-medium text-amber-800 mb-1">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-500" />
+            <label className="field">
+              <span>Password</span>
+              <div className="field-control">
+                <Lock size={18} />
                 <input
+                  data-testid="password-input"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="input pl-10"
-                  placeholder="••••••••"
+                  placeholder="h*****"
                   required
                 />
               </div>
-            </div>
+            </label>
 
-            <button type="submit" disabled={loading} className="btn-primary w-full justify-center flex">
-              {loading ? 'Signing in...' : 'Sign in'}
+            <button type="submit" className="love-button">
+              <Heart size={18} />
+              Open love page
             </button>
           </form>
 
-          <div className="mt-6 p-3 bg-amber-50/60 rounded-lg">
-            <p className="text-xs text-amber-700 font-medium mb-1">Demo credentials:</p>
-            <p className="text-xs text-amber-700">Admin: admin@crmcloud.uz / admin123</p>
-            <p className="text-xs text-amber-700">Sales: sales1@crmcloud.uz / sales123</p>
+          <div className="entry-note">
+            <p className="entry-title">Entry code :</p>
+            <p>The name I saved you under in my contacts</p>
+            <p>Login : Q**x*r Q***m</p>
+            <p>You used to start every morning like this</p>
+            <p>Password : h*****</p>
           </div>
-        </div>
+        </section>
 
-        <p className="text-center text-amber-700 text-xs mt-6">
-          BTEC Unit 6 — Cloud Network Infrastructure
-        </p>
+        <p className="login-foot">Made with love</p>
       </div>
-    </div>
+    </main>
   );
 }

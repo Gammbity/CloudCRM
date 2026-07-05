@@ -34,11 +34,13 @@ WORKDIR /app
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
+
 COPY package.json ./
+COPY entrypoint.js ./
 COPY entrypoint.sh ./
 COPY --from=builder /app/dist/seed ./dist/seed
 
-RUN chmod +x entrypoint.sh && chown -R nodeuser:nodejs /app
+RUN chmod +x entrypoint.sh || true && chown -R nodeuser:nodejs /app
 
 USER nodeuser
 
@@ -47,4 +49,5 @@ EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
   CMD wget -qO- http://localhost:3001/api/health || exit 1
 
-CMD ["./entrypoint.sh"]
+# Use Node entrypoint script to run migrations/seed and start the server
+CMD ["node", "./entrypoint.js"]

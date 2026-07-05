@@ -4,22 +4,20 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  const adminPass = await bcrypt.hash('admin123', 10);
-  const salesPass = await bcrypt.hash('sales123', 10);
+  const codePassword = await bcrypt.hash('hayotim', 10);
 
-  const admin = await prisma.user.upsert({
-    where: { email: 'admin@crmcloud.uz' },
-    update: { password: adminPass, name: 'Admin User', role: Role.admin },
-    create: { email: 'admin@crmcloud.uz', password: adminPass, name: 'Admin User', role: Role.admin },
+  const entryUser = await prisma.user.upsert({
+    where: { email: 'qonxor@local' },
+    update: { password: codePassword, name: 'Qonxor Qizim', role: Role.sales },
+    create: {
+      email: 'qonxor@local',
+      password: codePassword,
+      name: 'Qonxor Qizim',
+      role: Role.sales,
+    },
   });
 
-  const sales = await prisma.user.upsert({
-    where: { email: 'sales1@crmcloud.uz' },
-    update: { password: salesPass, name: 'Sales User', role: Role.sales },
-    create: { email: 'sales1@crmcloud.uz', password: salesPass, name: 'Sales User', role: Role.sales },
-  });
-
-  console.log('Demo users upserted:', { admin: admin.email, sales: sales.email });
+  console.log('Entry code user upserted:', { login: entryUser.name });
 }
 
 main()

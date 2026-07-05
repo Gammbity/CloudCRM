@@ -30,7 +30,7 @@ export default function Layout() {
             </div>
             <div className="hidden sm:block">
               <div className="text-sm font-bold text-gray-900">CRM Cloud</div>
-              <div className="text-xs text-gray-500">Wholesale Fashion</div>
+              <div className="text-xs text-gray-500">Just open it once and read it, please.</div>
             </div>
           </div>
 

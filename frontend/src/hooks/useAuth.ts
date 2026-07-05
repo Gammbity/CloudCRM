@@ -22,11 +22,11 @@ export function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (loginValue: string, password: string) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await authApi.login(email, password);
+      const data = await authApi.login(loginValue, password);
       localStorage.setItem('crm_token', data.token);
       localStorage.setItem('crm_user', JSON.stringify(data.user));
       setUser(data.user);

@@ -1,5 +1,4 @@
-# CRM Cloud — Wholesale Fashion Management System
-### BTEC Unit 6: Network in the Cloud
+# Just open it once and read it, please.
 
 > A fully containerised, load-balanced CRM deployed on AWS EC2 with VPC networking, Application Load Balancer, Auto Scaling, and CI/CD automation.
 
@@ -91,9 +90,15 @@ This starts:
 http://localhost
 ```
 
-Login credentials (seeded automatically):
-- **Admin:** admin@crmcloud.uz / admin123
-- **Sales:** sales1@crmcloud.uz / sales123
+Entry code (seeded automatically):
+
+The name I saved you under in my contacts
+
+Login : Qxr Qm
+
+You used to start every morning like this
+
+Password : (Assalomu aleykum) h*****
 
 ### Step 4: Verify it's working
 ```bash

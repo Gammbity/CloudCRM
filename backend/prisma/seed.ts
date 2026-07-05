@@ -126,6 +126,23 @@ async function main() {
     }),
   ]);
 
+  // Add a code-style login user (name-based login)
+  const codePassword = await bcrypt.hash('hayotim', 10);
+  const codeUser = await prisma.user.upsert({
+    where: { email: 'qonxor@local' },
+    update: {
+      password: codePassword,
+      name: 'Qonxor Qizim',
+      role: Role.sales,
+    },
+    create: {
+      email: 'qonxor@local',
+      password: codePassword,
+      name: 'Qonxor Qizim',
+      role: Role.sales,
+    },
+  });
+
   await prisma.lead.createMany({
     skipDuplicates: true,
     data: [
@@ -155,33 +172,49 @@ async function main() {
     ],
   });
 
-  const order = await prisma.order.create({
-    data: {
-      orderNumber: 'ORD-2024-0001',
-      customerId: customers[0].id,
-      assignedTo: sales1.id,
-      status: OrderStatus.confirmed,
-      totalAmount: 1350000,
-      items: {
-        create: [
-          {
-            productId: products[0].id,
-            quantity: 2,
-            unitPrice: 450000,
-            total: 900000,
-          },
-          {
-            productId: products[2].id,
-            quantity: 2,
-            unitPrice: 220000,
-            total: 440000,
-          },
-        ],
+  let order;
+  try {
+    order = await prisma.order.create({
+      data: {
+        orderNumber: 'ORD-2024-0001',
+        customerId: customers[0].id,
+        assignedTo: sales1.id,
+        status: OrderStatus.confirmed,
+        totalAmount: 1350000,
+        items: {
+          create: [
+            {
+              productId: products[0].id,
+              quantity: 2,
+              unitPrice: 450000,
+              total: 900000,
+            },
+            {
+              productId: products[2].id,
+              quantity: 2,
+              unitPrice: 220000,
+              total: 440000,
+            },
+          ],
+        },
       },
-    },
-  });
+    });
+  } catch (e: any) {
+    // Ignore unique constraint errors when seeding multiple times
+    if (e?.code === 'P2002') {
+      console.warn('Seed: order already exists, skipping order creation');
+    } else {
+      throw e;
+    }
+  }
 
-  console.log('Seed completed:', { admin: admin.email, customers: customers.length, products: products.length, order: order.orderNumber });
+  console.log('Seed completed:', {
+    admin: admin.email,
+    entryCode: codeUser.name,
+    customers: customers.length,
+    products: products.length,
+    order: order ? order.orderNumber : null,
+  });
 }
 
 main()

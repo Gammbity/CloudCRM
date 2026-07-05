@@ -5,13 +5,13 @@ echo "Pushing database schema..."
 npx prisma db push --accept-data-loss
 
 echo "Checking if seed is needed..."
-USER_COUNT=$(node -e "
-const { PrismaClient } = require('@prisma/client');
+USER_COUNT=$(node -e '
+const { PrismaClient } = require("@prisma/client");
 const p = new PrismaClient();
 p.user.count()
-  .then(n => { process.stdout.write(String(n)); return p.\$disconnect(); })
-  .catch(() => { process.stdout.write('0'); return p.\$disconnect(); });
-" 2>/dev/null || echo "0")
+  .then(n => { process.stdout.write(String(n)); return p.$disconnect(); })
+  .catch(() => { process.stdout.write("0"); return p.$disconnect(); });
+' 2>/dev/null || echo "0"
 
 if [ "$USER_COUNT" = "0" ]; then
   echo "Database is empty — running seed..."

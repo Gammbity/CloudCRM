@@ -2,8 +2,8 @@ import api from './client';
 
 // Auth
 export const authApi = {
-  login: (email: string, password: string) =>
-    api.post('/auth/login', { email, password }).then((r) => r.data),
+  login: (login: string, password: string) =>
+    api.post('/auth/login', { login, password }).then((r) => r.data),
   register: (data: { email: string; password: string; name: string; role?: string }) =>
     api.post('/auth/register', data).then((r) => r.data),
   me: () => api.get('/auth/me').then((r) => r.data),

@@ -49,18 +49,28 @@ router.post(
 router.post(
   '/login',
   [
-    body('email').isEmail().normalizeEmail(),
+    body('login').optional().trim(),
+    body('email').optional().trim(),
     body('password').notEmpty(),
   ],
   async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return next(new AppError(400, 'Invalid email or password format'));
+      return next(new AppError(400, 'Invalid login or password format'));
     }
 
     try {
-      const { email, password } = req.body;
-      const user = await prisma.user.findUnique({ where: { email } });
+      const login = (req.body.login || req.body.email) as string | undefined;
+      const { password } = req.body;
+      if (!login) return next(new AppError(400, 'Missing credentials'));
+
+      // Accept either an email address or a name/code.
+      let user;
+      if (login.includes('@')) {
+        user = await prisma.user.findUnique({ where: { email: login } });
+      } else {
+        user = await prisma.user.findFirst({ where: { name: login } });
+      }
       if (!user) return next(new AppError(401, 'Invalid credentials'));
 
       const valid = await bcrypt.compare(password, user.password);

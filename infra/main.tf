@@ -31,7 +31,7 @@ provider "aws" {
       Project     = var.project_name
       Environment = var.environment
       ManagedBy   = "Terraform"
-      BTEC        = "Unit6-CloudNetworking"
+      # BTEC tag removed per project rebranding
     }
   }
 }
