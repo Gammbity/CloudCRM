@@ -83,7 +83,7 @@ export default function CustomersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Customers</h1>
-          <p className="text-gray-500 text-sm">Manage your wholesale clients</p>
+          <p className="text-gray-500 text-sm">Dostonbrat</p>
         </div>
         {canEdit && (
           <button onClick={() => { setForm(emptyForm); setEditId(null); setShowModal(true); }} className="btn-primary flex items-center gap-2">
